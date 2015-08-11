@@ -11,17 +11,27 @@ no_replace=False
 def apply_delay(time,delay):
     hour = int(time[0])
     minute = int(time[1])
-    second = int(time[2])
+    sec = int(time[2])
     mili = int(time[3])
     if (mili + delay) < 0:
         mili = mili + delay + 1000
-        second-=1
-        #Subtract minute
-    if (mili + delay) > 1000:
+        sec-=1
+        if sec < 0:
+            sec+=60
+            minute-=1
+    elif (mili + delay) > 1000:
         #Add minute
         mili = mili + delay - 1000
-        second += 1
-    time_new = str(hour)+":"+str(minute)+":"+str(second)+","+str(mili)
+        sec += 1
+        if sec > 59:
+            sec-=60
+            minute+=1
+
+    if sec < 10: sec = '0'+str(sec)
+    if minute < 10: minute = '0'+str(minute)
+    if hour < 10: hour = '0'+str(hour)
+
+    time_new = str(hour)+":"+str(minute)+":"+str(sec)+","+str(mili)
     return time_new
 
 
@@ -49,7 +59,6 @@ def arg_parse():
 def main():
     global filename, delay, no_replace
     arg_parse()
-    print "Arguments parsed successfully - filename = %s, delay = %d, --no-replace=%s" %(filename, delay, no_replace)
     with open(filename,"r") as f:
         text = f.read()
 
