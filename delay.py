@@ -7,6 +7,8 @@ filename = ''
 delay=0
 no_replace=False
 
+#TODO: Deal with  cases where delay > 1000
+
 
 def apply_delay(time,delay):
     hour = int(time[0])
@@ -19,6 +21,9 @@ def apply_delay(time,delay):
         if sec < 0:
             sec+=60
             minute-=1
+            if minute < 0:
+                minute+=60
+                hour-=1
     elif (mili + delay) > 1000:
         #Add minute
         mili = mili + delay - 1000
@@ -26,6 +31,9 @@ def apply_delay(time,delay):
         if sec > 59:
             sec-=60
             minute+=1
+            if minute > 59:
+                minute-=60
+                hour+=1
 
     if sec < 10: sec = '0'+str(sec)
     if minute < 10: minute = '0'+str(minute)
@@ -64,13 +72,14 @@ def main():
 
     times = re.findall(r'\d\d:\d\d:\d\d,\d\d\d',text)
     for t in times:
+        # Ghastly hack to split up the timestamp properly without using regex groups.
+        # Can't remember why I didn't want to use them - probably made parsing difficult.
         time_new = apply_delay(t.replace(',',':').split(':'),delay)
         text = text.replace(t,time_new)
 
     with open(filename,"w") as f:
         f.write(text)
     
-
 
 if __name__=="__main__":
     main()
