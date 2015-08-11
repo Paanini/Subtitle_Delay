@@ -1,1 +1,12 @@
-This is a README file
+usage: delay.py [-h] [--no-replace] filename delay
+
+A handy script to introduce a (+/-) delay in a subtitle (SRT) file
+
+positional arguments:
+  filename      Enter the name of the Subtitle file to be used
+  delay         Enter the delay to be introduced in ms
+
+optional arguments:
+  -h, --help    show this help message and exit
+  --no-replace  Create a new Subtitle file instead of modifying the existing
+                one
