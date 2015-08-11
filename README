@@ -1,6 +1,7 @@
 usage: delay.py [-h] [--no-replace] filename delay
 
-A handy script to introduce a (+/-) delay in a subtitle (SRT) file
+A handy script to introduce a (+/-) delay in a subtitle (SRT) file (Since VLC
+does a shoddy job of adding delays)
 
 positional arguments:
   filename      Enter the name of the Subtitle file to be used
