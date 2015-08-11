@@ -8,6 +8,23 @@ delay=0
 no_replace=False
 
 
+def apply_delay(time,delay):
+    hour = int(time[0])
+    minute = int(time[1])
+    second = int(time[2])
+    mili = int(time[3])
+    if (mili + delay) < 0:
+        mili = mili + delay + 1000
+        second-=1
+        #Subtract minute
+    if (mili + delay) > 1000:
+        #Add minute
+        mili = mili + delay - 1000
+        second += 1
+    time_new = str(hour)+":"+str(minute)+":"+str(second)+","+str(mili)
+    return time_new
+
+
 def arg_parse():
     global filename, delay, no_replace
     cur_path = os.getcwd()
@@ -21,6 +38,7 @@ def arg_parse():
     args = parser.parse_args()
     filename = args.filename
     no_replace = args.no_replace
+    delay = args.delay
 
     # Check if the subtitle_file is valid
     if not (os.path.isfile(filename) or os.path.isfile(os.path.join(cur_path,filename))):
@@ -37,7 +55,8 @@ def main():
 
     times = re.findall(r'\d\d:\d\d:\d\d,\d\d\d',text)
     for t in times:
-        text = text.replace(str(t),"Found!")
+        time_new = apply_delay(t.replace(',',':').split(':'),delay)
+        text = text.replace(t,time_new)
 
     with open(filename,"w") as f:
         f.write(text)
