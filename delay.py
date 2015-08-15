@@ -38,7 +38,7 @@ def arg_parse():
     cur_path = os.getcwd()
     help_string = "A handy script to introduce a (+/-) delay in a subtitle (SRT) file\n(Since VLC does a shoddy job of adding delays)"
 
-    # Parse the arguments from the command line
+    # Parse the argumentsi from the command line
     parser = argparse.ArgumentParser(description=help_string)
     parser.add_argument("filename", help="Enter the name of the Subtitle file to be used",type=str)
     parser.add_argument("delay", help="Enter the delay to be introduced in ms",type=int)
@@ -67,8 +67,13 @@ def main():
         time_new = apply_delay(t.replace(',',':').split(':'),delay)
         text = text.replace(t,time_new)
 
-    with open(filename,"w") as f:
-        f.write(text)
+    if not no_replace:
+        with open(filename,"w") as f:
+            f.write(text)
+    else:
+        new_filename = os.path.basename(os.path.splitext(filename)[0]) + ".srt"
+        with open(new_filename,"w") as f:
+            f.write(text)
     
 
 if __name__=="__main__":
