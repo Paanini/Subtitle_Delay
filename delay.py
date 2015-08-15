@@ -2,44 +2,34 @@
 import argparse
 import os
 import re
+import datetime
 
 filename = ''
 delay=0
 no_replace=False
-
-#TODO: Deal with  cases where delay > 1000
 
 
 def apply_delay(time,delay):
     hour = int(time[0])
     minute = int(time[1])
     sec = int(time[2])
-    mili = int(time[3])
-    if (mili + delay) < 0:
-        mili = mili + delay + 1000
-        sec-=1
-        if sec < 0:
-            sec+=60
-            minute-=1
-            if minute < 0:
-                minute+=60
-                hour-=1
-    elif (mili + delay) > 1000:
-        #Add minute
-        mili = mili + delay - 1000
-        sec += 1
-        if sec > 59:
-            sec-=60
-            minute+=1
-            if minute > 59:
-                minute-=60
-                hour+=1
+    milli = int(time[3])
+    micro = milli*1000
+    
+    #Use a dummy date of 1/1/1000 so we can get a time delta
+    initial_time = datetime.datetime(1000,1,1,hour,minute,sec,micro)
+    delayed_time = initial_time + datetime.timedelta(milliseconds = milli)
+
+    hour = delayed_time.hour
+    minute = delayed_time.minute
+    second = delayed_time.second
+    milli = delayed_time.microsecond/1000
 
     if sec < 10: sec = '0'+str(sec)
     if minute < 10: minute = '0'+str(minute)
     if hour < 10: hour = '0'+str(hour)
 
-    time_new = str(hour)+":"+str(minute)+":"+str(sec)+","+str(mili)
+    time_new = str(hour)+":"+str(minute)+":"+str(sec)+","+str(milli)
     return time_new
 
 
