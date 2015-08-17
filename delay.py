@@ -71,7 +71,7 @@ def main():
         with open(filename,"w") as f:
             f.write(text)
     else:
-        new_filename = os.path.basename(os.path.splitext(filename)[0]) + ".srt"
+        new_filename = os.path.basename(os.path.splitext(filename)[0]) + "_delay.srt"
         with open(new_filename,"w") as f:
             f.write(text)
     
